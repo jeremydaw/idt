@@ -3,6 +3,8 @@ This github repository, named idt, user jeremydaw, contains the paper
 (in subdirectory orlowska-idt)
 Dawson and Gore,
 Machine-checked Meta-theory of Dual-Tableaux for Intuitionistic Logic
+in the monograph
+"Ewa Orłowska on Relational Methods in Logic and Computer Science"
 and the proofs described in it (in subdirectory hol).
 
 The proof were last run using HOL built from github commit
