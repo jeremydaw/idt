@@ -83,6 +83,8 @@ chapter~\cite{fitting-dual-tableau} in this volume, but not familiar
 with interactive theorem proving. All of our \hol{} files can be found
 here:\marginpar{JED, a more permanent archive?}
 \url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}
+together with a \texttt{README} file detailing the HOL version used
+and instructions for compiling and running the proof files.
 
 \section{\hol: an interactive theorem prover}
 
@@ -1302,7 +1304,9 @@ however adding context may change the valuation to make it true
 at world \texttt{u} but not \texttt{v}, or vice versa,
 which would make 
 \texttt{tab\_val\_aux R pv w esfss} and \texttt{sfs\_val\_aux R pv w esf}
-unequal.}
+unequal.
+This doesn't suggest a flaw in Fitting's proof, rather that the level of detail
+he gives doesn't indicate precisely the sequence of lemmas to be used.}
 This means that the proof of Lemma~\ref{idt-pres-frg}, 
 so far as it concerns these rules, depends on first applying 
 Lemma~\ref{is-tab-rule-pres-eqv} to Lemma~\ref{idt-rules-aux-equiv}
@@ -1534,12 +1538,14 @@ and another using inductive definitions.
 \subsubsection{$I$-tautologous sets }
 
 We first define an $I$-tautologous set of signed formulae similarly to
-\cite[Definition~4]{fitting-dual-tableau}, but without the
+\cite[Definition~7]{fitting-dual-tableau}, but without the
+\marginpar{was Def 4}
 requirements that: (i) an $I$-tautologous set S must have a finite
 $I$-tautologous subset; and (ii) that the closure of each branch is
 atomic; and (iii) that dual-tableaux satisfy the single-use
 restriction, whereby only active signed formulae are considered for a
-rule application (see \cite[Definition~1]{fitting-dual-tableau}).
+rule application (see \cite[Definitions~1,4]{fitting-dual-tableau}).
+\marginpar{was Def 1}
 We also define an $I$-tautologous set of sets of signed formulae (a set
 of dual-tableau leaves, \ie a dual-tableau fringe):
 \begin{definition}[\texttt{Itautss},\texttt{Itauts}]\label{Itauts-def}
@@ -1719,6 +1725,7 @@ satisfying those clauses.
 % \end{definition}
 
 \subsubsection{Relating the two notions of $I$-tautologous sets}
+\label{Itauti-Itauts}
 
 We then proved the equivalence of 
 Definition~\ref{Itauti} for \texttt{Itauti} and
@@ -1748,6 +1755,16 @@ does not close in a finite number of rule applications; to put it
 another way, definition \texttt{Itauts} involves a finite number of
 dual-tableau steps, whereas definition \texttt{Itauti} involves a dual-tableau
 of finite depth.
+
+The definition of \texttt{Itauti} was easier to work with than that of
+\texttt{Itauts}, avoiding our difficult earlier proof of 
+Lemma~\ref{ITAUT-EX-RULE}.
+\marginpar{this para added, can't quantify relative effort as previous proof
+of Lemma~\ref{ITAUT-EX-RULE} has been deleted}
+However, using both definitions and proving their equivalence
+(in the case of finitely branching rules) essentially shows that,
+even when using the definition \texttt{Itauti}, we need only finitely many steps
+(which is implicit in way \texttt{Itauts} is defined).
 
 We then obtained further necessary results, such as the monotonicity
 of \texttt{Itauti} and that $I$-tautologous is a property of finite
@@ -1865,6 +1882,7 @@ in our definition of $I$-tautologous:
   search. Indeed, it easily gives us decidability.''  That each
   formula is ``principal'' only once is also redundant as already
   stated by Fitting~\cite[just after his Definition~2]{fitting-dual-tableau}.
+  \marginpar{where ???}
 \end{description}
 
 \subsection{The Lindenbaum construction}
@@ -2324,17 +2342,21 @@ since we can perform structural induction on the clauses that make up
 the inductive definition. All of our \hol-code
 can be found via the link (\url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}).
 
-
 Regarding the effort required. 
-The proof script is \textbf{XXXXX} lines of \hol-code.
+The proof script is {2100} lines of \hol-code.
 Contrasted against Fitting's original
-chapter~\cite{fitting-dual-tableau}, we see a blow up factor of about
-\textbf{YYYY}, which is quite standard in such ventures.
-\marginpar{JED?}\textbf{How much theory had to be developed that is not specific to this
-particular task? (Here, lemma 26 comes to mind. This lemma is tedious, but not
-interesting. In principle, there is a generic way of proving an algebraic data
-type to be countable. How much support for such reasoning is there in HOL?
-Would different theorem provers fare differently here?)}
+chapter~\cite{fitting-dual-tableau}, this is a similar length --- 
+\marginpar{blowup factor not meaningful}
+but containing much more detail of small proof steps, and much less descriptive
+and explanatory material.
+This contains some results which were proved in a roundabout way, or with
+some duplication of effort (such as the issue of \texttt{Itauti} versus
+\texttt{Itauts}, see \S\ref{Itauti-Itauts}),
+and a small amount of theory not specific to this particular task,
+such as the proof of Lemma~\ref{SF-COUNTABLE}.
+(Generally HOL offers good support for most common generic reasoning tasks, 
+although not for proving an algebraic data type to be countable).
+\marginpar{Question answered}
 
 One caveat: Jeremy Dawson has over 20 years
 of experience in interactive theorem proving, and yet it took him 2
