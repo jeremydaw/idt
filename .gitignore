@@ -1,0 +1,27 @@
+# HOL stuff
+*Script
+*Theory.sig
+*Theory.sml
+*Theory.dat
+*.uo
+*.ui
+.hollogs
+.HOLMK
+
+# LaTeX guff
+*.aux
+*.log
+*.toc
+*.dvi
+*.out
+*.idx
+*.ilg
+*.ind
+*.bbl
+*.blg
+*.tde
+*.tid
+*.tix
+*.hix
+
+
