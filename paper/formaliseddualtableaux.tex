@@ -11,11 +11,15 @@
 
 \newcommand{\hol}{\texttt{HOL4}}
 
+\newcommand{\ie}{\textit{i.e. }}
+
 \newcommand{\tsim}{\textasciitilde}
 \newcommand{\ttsim}{\texttt{\textasciitilde}}
 
 \renewcommand\labelenumi{(\roman{enumi})}
 \renewcommand\theenumi\labelenumi
+
+\newcommand\comment[1]{}
 
 \title{Machine-checked Meta-theory of Dual-Tableaux for Intuitionistic
 Logic}
@@ -32,7 +36,8 @@ Logic}
   We describe how we formalised the meta-theory of Melvin Fitting's
   dual-tableaux calculi for intuitionistic logic using the \hol{}
   interactive theorem prover. The paper is intended for readers
-  familiar with dual-tableaux  who might be daunted by the idea of
+  familiar with dual-tableaux  who might be interested in, but daunted
+  by, the idea of
   formalising the required notions in a modern interactive theorem
   prover. 
 \end{abstract}  
@@ -41,6 +46,11 @@ Logic}
 
 \newpage
 \section{Introduction and motivation}
+
+\textbf{Ensure that Mel cites our work properly. He mentions ``proof
+  theory'' in his citation on page 3 line 5, but this is not really
+  accurate as our contribution mimics his in using the semantics. His
+  citation should also say ``Dawson and Gor\'e'' not just ``Gor\'e''.}
 
 Tableaux calculi originated with the work of Beth in the
 1950s~\cite{beth-padoas}. In 1959, they were used by
@@ -55,14 +65,15 @@ of the literature must acknowledge a parallel, and sometimes more
 advanced, tradition known as ``dual-tableaux'' which arose in Poland
 from the work of Rasiowa, Sikorski and Ewa
 Orlowska~\cite{orlowska-joanna-book}.  Here, we pay homage to that
-tradition by wishing Ewa a happy 60th birthday.
+tradition.
 
 Over the past decade, we have formalised many aspects
 of proof-theory including sequent
 calculi~\cite{DBLP:conf/lpar/DawsonG10} and display
-calculi\cite{dawson-gore-formalised-cut-admissibility}. Here, we turn
+calculi~\cite{dawson-gore-formalised-cut-admissibility}. Here, we turn
 our attention to the meta-theory of dual-tableaux
-calculi. Specifically, we show how to formalise the dual-tableaux
+calculi. Specifically, we show how to formalise the semantic soundness
+and completeness proofs for the dual-tableaux
 calculi for intuitionistic logic given by Melvin
 Fitting~\cite{fitting-dual-tableau}.  Our hope is that it will serve
 as a guide to others who may want to follow in our footsteps.
@@ -70,7 +81,7 @@ as a guide to others who may want to follow in our footsteps.
 We assume that the reader is familiar with Fitting's
 chapter~\cite{fitting-dual-tableau} in this volume, but not familiar
 with interactive theorem proving. All of our \hol{} files can be found
-here:
+here:\marginpar{JED, a more permanent archive?}
 \url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}
 
 \section{\hol: an interactive theorem prover}
@@ -130,9 +141,10 @@ respectively.
 
 For example, the symbol \texttt{\#} is the infix type constructor
 denoting the type of pairs and the symbol \texttt{:} is the infix
-operator for ``member of type''. Thus, \texttt{a : alpha} encodes that
-``\texttt{a} is of type \texttt{alpha}''. If also \texttt{b : beta} then \hol{}
-can deduce that \texttt{(a, b) : alpha \# beta} which encodes
+operator for ``member of type''. Thus, \mbox{\texttt{a :\ alpha}} encodes that
+``\texttt{a} is of type \texttt{alpha}''. 
+If also \mbox{\texttt{b :\ beta}} then \hol{}
+can deduce that \texttt{(a, b) :\ alpha \# beta} which encodes
 ``\texttt{(a, b)} is in the type that consists of pairs of objects from
 types \texttt{alpha} and \texttt{beta} respectively''.  But generally,
 type constructors are written postfix, so \texttt{alpha set} is the type
@@ -157,6 +169,7 @@ atom is a variable left to be chosen later.
 \begin{definition}[formula]
  The formulae of intuitionistic logic are built from an infinite
  supply of atomic formulae (\texttt{Atom 'a} over some base type
+\marginpar{Could we put Atom clause first? SOME PROOFS BREAK, WOULD NEED TO FIX}
  \texttt{'a})
  using the connectives
  $\land$ (\texttt{And}),
@@ -233,6 +246,16 @@ uses when they occur.
 
 \subsection{Signed-formula sets as unsigned formula set pairs}
 
+For a set $S$ of signed formulae, 
+Fitting~\cite[Definition~5]{fitting-dual-tableau} 
+defines the two sets 
+$S^T = \{T~X \mid T~X \in S \}$ 
+and
+$S^F = \{F~X \mid F~X \in S \}$.
+He also defines the ability to strip the signs and extract only the
+unsigned formulae via:
+$S^\circ = \{X \mid T~X \in S \mbox{ or } F~X \in S \}$.
+%
 A set of signed-formulae can also be seen as a sequent built out of
 unsigned formulae collecting the \textit{F}-signed formulae on the
 left and the \textit{T}-signed formulae on the right (without their
@@ -246,13 +269,14 @@ representations.  We also illustrate some \hol{} syntax.
 
 The construct \texttt{'f} is a type variable: it will stand for a
 (unsigned) formula.
-In \hol, sets and predicates are identified,  thus
-$x \in P$ (\texttt{x IN P}) means exactly $P\ x$ (\texttt{P x)},
-and the type $\alpha\ \mathit{set}$ 
-is the same as $\alpha \to \mathit{bool}$:
-telling us whether a particular term $x$ (say) of type 
+In \hol, sets and predicates are identified, thus
+\marginpar{wording changed}
+the type $\alpha\ \mathit{set}$ 
+is the same as $\alpha \to \mathit{bool}$, and
+$x \in P$ (\texttt{x IN P}) is defined to be $P(x)$ (\texttt{P x)}.
+Whether a particular term $x$ (say) of type 
 $\mathtt{\alpha}$ is or
-is not in the set $P$ of type $\alpha\ \mathtt{set}$ as determined by the
+is not in the set $P$ of type $\alpha\ \mathtt{set}$ is determined by the
 value \texttt{T} or \texttt{F} from
 \texttt{bool} which the predicate $P(x)$ takes.
 
@@ -260,10 +284,13 @@ The function $\mathit{FST} : \gamma \times \delta \to \gamma$
 returns the first component of type $\gamma$ of a pair
 of type $(\gamma,\delta)$.
 If we put $\gamma = \mathit{bool}$ then 
-$\mathit{FST}$ (as a set) is of type 
-$\mathit{bool} \times \delta \to \mathit{bool}$.
+$\mathit{FST}$ is of type 
+$\mathit{bool} \times \delta \to \mathit{bool}$,
+which is synonymous with $(\mathit{bool} \times \delta)~\mathit{set}$
+in \hol{}.
+%thus allowing us to view  $\mathit{FST}$ as a set.
 % CHANGED Fri Feb  3 12:48:21 AEDT 2017
-For a term $z: \mathit{bool} \times \delta$,
+That is, for a term $z: \mathit{bool} \times \delta$,
 the predicate $FST(z)$ evaluates to true exactly when
 the first component of $z$ is $T$.
 Thus $FST : (\mathit{bool} \times \delta)\ \mathit{set}$
@@ -278,7 +305,7 @@ are defined as:
 \\[1em]
 \mbox{\rm
   \begin{tabular}[c]{ll}
-  \\ \texttt{get\_ts sfs} & \texttt{: (bool \# 'f) set -> 'f set}
+  \\ \texttt{get\_ts } & \texttt{: (bool \# 'f) set -> 'f set}
   \\ \texttt{get\_ts sfs} & 
            \texttt{= (IMAGE SND (sfs INTER FST))}
   \\       & $= \{f: \mathtt{'f} \mid (T, f) \in sfs\}$
@@ -390,7 +417,12 @@ type \texttt{'f} (an unsigned formula in the case that \texttt{'f} is
 \texttt{'a formula}). It produces a result which is a pair $(L,R)$ of
 sets where $L$ (the antecedent) and $R$ (the succedent) 
 are both sets of type \texttt{'f set}. That is,
-$(L, R)$ is the sequent $L \vdash R$.
+$(L, R)$ is the sequent $L \vdash R$. For some given set $S$ of signed
+formulae, Fitting would write these as 
+$L = (S^F)^\circ$
+and \marginpar{JED please check! LOOKS OK}
+$R = (S^T)^\circ$ 
+respectively.
 
 % Next we give the \hol{} definition of these functions using several
 % functions pre-defined in \hol.  The infix operators \texttt{UNION} and
@@ -507,7 +539,7 @@ and $\{F~Y , F~ X \lor Y \}$:
 \DisplayProof
 \]
 This describes Fitting's first six rules
-\cite[Figure~6]{fitting-dual-tableau}.
+\cite[Figure~1.6]{fitting-dual-tableau}.
 
 \begin{definition}[rule skeleton]
   A rule-skeleton of type \texttt{'a rule\_sk} is a pair \texttt{(psk, cssk)}
@@ -575,11 +607,14 @@ and
 $S \cup \{F ~ X \lor Y, F~ Y\}$
 of signed formulae.
 
-Thus \texttt{rule\_sk} (rule-skeleton) takes an item of type
-\texttt{'a} (here, a signed formula) and returns a set of conclusions
+Thus \texttt{rule\_sk} (rule-skeleton) models the operation that has 
+a premise of type \texttt{'a} (here, a signed formula)
+and a set of conclusions
+\marginpar{changed wording of this para}
 where each conclusion is a set of items of type \texttt{'a} (here,
-signed formula), while \texttt{rule} (an ordinary rule) takes an item
-of type \texttt{'a} (here, a set of signed formulae) and returns a set
+signed formula), while \texttt{rule} (an ordinary rule) models an
+operation that has a premise
+of type \texttt{'a} (here, a set of signed formulae) and a set
 of conclusions, each of which is an item of type \texttt{'a} 
 (here, a set of signed formulae).
 
@@ -626,13 +661,14 @@ the type \texttt{'sf rule\_sk} is an abbreviation for
   set set}.
 
 So where a rule-skeleton,
-as in~\cite[Fig.\ 3]{fitting-dual-tableau}, takes
-a signed formula and gives a set of sets of signed formulae
+\marginpar{changed wording of this para also}
+as in~\cite[Fig.\ 1.3]{fitting-dual-tableau}, has, for its premise,
+a signed formula and, for its conclusion, a set of sets of signed formulae
 (so of type \texttt{'sf rule\_sk}),
 adding context gives a rule as
-in~\cite[Fig.\ 6]{fitting-dual-tableau},
-which takes a 
-set of signed formulae and gives a set of sets of signed formulae
+in~\cite[Fig.\ 1.6]{fitting-dual-tableau},
+which has, for its premise, a set of signed formulae and,
+for its conclusion, a set of sets of signed formulae
 (so of type \texttt{'sf set rule}).
 
 The definition of \texttt{is\_tab\_rule} is an inductive definition,
@@ -640,7 +676,7 @@ which means that \texttt{is\_tab\_rule} is defined to be the predicate which
 is satisfied (only) by pairs that can be inferred to satisfy it
 using the definition clause given.
 
-For rules such as the last two of~\cite[Fig.\ 6]{fitting-dual-tableau},
+For rules such as the last two of~\cite[Fig.\ 1.6]{fitting-dual-tableau},
 where only $F$-signed context items are allowed in the
 result, we have similar relations:
 \begin{definition}
@@ -674,8 +710,7 @@ is the set of $F$-signed formulae from
 \texttt{U}.
 Thus
 \texttt{is\_ag\_tab\_rule} allows any context in the premise, but only
-$F$-signed context in the conclusion (as in the last two rules of
-\cite[Figure~6]{fitting-dual-tableau}),
+$F$-signed context in the conclusion (as in the last two rules of~\cite[Figure~1.6]{fitting-dual-tableau}),
 
 \begin{definition}
 For all $s$, $st$ and $U$,
@@ -721,7 +756,7 @@ We then collect these rule skeletons into two sets as below.
 \item[\texttt{ant\_idt\_rule}:] the skeletons of the
   \texttt{imp\_right} and \texttt{not\_right} rules which have only a
    $F$-signed context in the result
-   (see \cite[Figure~6]{fitting-dual-tableau}).
+   (see~\cite[Figure~1.6]{fitting-dual-tableau}).
  \end{description}
 \end{definition}
 
@@ -764,7 +799,7 @@ for
 intuitionistic dual-tableaux so these are the only ways to obtain a
 legal rule.
 
-Notice that we do not stipulate a rule for closing a dual-tableau,
+Notice that we do not define a closed dual-tableau,
 which is dealt with in the next subsection.
 
 \subsection{Branches, dual-tableaux and their fringes}
@@ -775,11 +810,11 @@ will call its ``fringe'', is a set of sets of signed formulae.
 When we apply a rule to one of these leaves, the effect on the fringe
 is to replace that single leaf by the set of leaves 
 which is the result of the rule.  
-\begin{definition}[\texttt{fringe\_rules}]\label{fringe-rules}
+\begin{definition}[\texttt{extend\_fringe}]\label{extend-fringe}
   For all \textit{s}, \textit{sfr} and rule sets \textit{rs}, if
   \textit{rs} contains a rule which takes \textit{s} to the set
   \textit{sfr}, and we apply it to a dual-tableau with a fringe consisting
-  of the the leaf $s$ plus the 
+  of the leaf $s$ plus the 
   %s is one leaf, rf is the set of others
   leaf items \textit{rf} of the other branches, in addition to
   $s$, then the result is the new leaves \textit{sfr} arising
@@ -787,44 +822,48 @@ which is the result of the rule.
   branches.
 \begin{verbatim}
 ! rs s sfr. rs (s, sfr) 
-          ==> fringe_rules rs ({s} UNION rf, sfr UNION rf) ;
-fringe_rules : 'sfs rule set -> ('sfs set # 'sfs set) set ;
+          ==> extend_fringe rs ({s} UNION rf, sfr UNION rf) ;
+extend_fringe : 'sfs rule set -> ('sfs set # 'sfs set) set ;
 \end{verbatim}
+\marginpar{referee would like to use IN, here and elsewhere, 
+but this is different in HOL 
+(ie, type 'a set is s synonym for 'a $\to$ bool, but 
+x IN S is not the same as S x, just provably equivalent)}
 % rules rewritten to avoid use of INSERT 
 % ONCE_REWRITE_RULE [INSERT_SING_UNION] fringe_rules_rules ;
 \end{definition}
 
 So for a rule set \texttt{rs}, the function
-\texttt{fringe\_rule rs} gives the set of resulting transformations
+\texttt{extend-fringe rs} gives the set of resulting transformations
 of the fringe of a dual-tableau obtained by applying one of the rules
 $(s, \mathit{sfr})$.
 %
 Here, we have written 
 the type variable as \texttt{'sfs} to suggest that we will
-use \texttt{fringe\_rule} where \texttt{'sfs} is  the type of sets of signed
+use \texttt{extend-fringe} where \texttt{'sfs} is  the type of sets of signed
 formulae. (We will also use the term variable \texttt{sfs} to indicate
 a set of signed formulae).
 Moreover, we shall instantiate \texttt{rs} as
 \texttt{idt\_tab\_rule} giving the type:
 \begin{verbatim}
-fringe_rules idt_tab_rule : ('a sf set set # 'a sf set set) set ; 
+extend_fringe idt_tab_rule : ('a sf set set # 'a sf set set) set ; 
 \end{verbatim}
 
 At this point we note that in \hol, sets and predicates are identified
-and so $x \in P$, (\textit{i.e.} \texttt{x IN P}), means exactly $P\
-x$ (\textit{i.e.} \texttt{P x}).
+and so $x \in P$, (\ie \texttt{x IN P}), means exactly $P\
+x$ (\ie \texttt{P x}).
 Consequently, 
-Definition~\ref{fringe-rules} of \texttt{fringe\_rules} might be more clearly written:
+Definition~\ref{extend-fringe} of \texttt{extend\_fringe} might be more clearly written:
 \begin{verbatim}
 (s, sfr) IN rs 
-           ==> ({s} UNION rf, sfr UNION rf) IN fringe_rules rs
+           ==> ({s} UNION rf, sfr UNION rf) IN extend_fringe rs
 \end{verbatim}
-This is an inductive definition which means that \texttt{fringe\_rules rs}
+This is an inductive definition which means that \texttt{extend\_fringe rs}
 is defined to be the set of those fringe-transformations which can
 be inferred to be in that set by application of this definition.
 
 The intuition is that we do not keep track of the internal nodes of a
-dual-tableau: we keep track of its root, a set of signed-formulae, and
+dual-tableau: we keep track of its root (a set of signed-formulae) and
 its fringe (a set of sets of signed-formulae).
 
 \subsection{Closed dual-tableaux and a statement of soundness}
@@ -833,28 +872,28 @@ By definition, a branch tip, or leaf, is then just a member of the fringe of a
 dual-tableau, that is, a leaf is a set of signed formulae. 
 
 \begin{definition}[closed branch]
-\label{br-closes}\label{dt-closes}\label{at-closes}
-  A branch tip, ie, a leaf, $\mathtt{sfs}$ is closed if it contains some
+\label{br-closed}\label{dt-closed}\label{at-closed}
+  A branch tip, \ie a leaf, $\mathtt{sfs}$ is closed if it contains some
   formula $\mathtt{f}$ signed
   $\mathtt{F}$ and $\mathtt{T}$:
 \begin{verbatim}
-   br_closes : 'a sf set -> bool
-   br_closes sfs = ?f. (T, f) IN sfs /\ (F, f) IN sfs 
+   br_closed : 'a sf set -> bool
+   br_closed sfs = ?f. (T, f) IN sfs /\ (F, f) IN sfs 
 \end{verbatim}
 
   A dual-tableau (fringe) $\mathtt{sfss}$ is closed if every 
-  branch $\mathtt{sfs}$ in it closes: 
+  branch $\mathtt{sfs}$ in it is closed: 
 \begin{verbatim}
-   dt_closes : 'a sf set set -> bool
-   dt_closes sfss = !sfs. sfs IN sfss ==> br_closes sfs 
+   dt_closed : 'a sf set set -> bool
+   dt_closed sfss = !sfs. sfs IN sfss ==> br_closed sfs 
 \end{verbatim}
 
   A leaf $\mathtt{sfs}$ is atomically closed if it contains some atomic
   formula $\mathtt{Atom\ p}$ signed
   $\mathtt{F}$ and $\mathtt{T}$:
 \begin{verbatim}
-   at_closes : 'a sf set -> bool
-   at_closes sfs = ?p. (T, Atom p) IN sfs /\ (F, Atom p) IN sfs
+   at_closed : 'a sf set -> bool
+   at_closed sfs = ?p. (T, Atom p) IN sfs /\ (F, Atom p) IN sfs
 \end{verbatim}
 
 \end{definition}
@@ -879,12 +918,12 @@ Thus our soundness theorem will be of the form below:
   dual-tableau fringe $bot$ is obtained from repeated
   applications of the set \texttt{idt\_tab\_rule} of rules to
   the initial fringe
-  $\{\{(T,f)\}\}$ and $bot$ is closed then the formula
+  $\{\{(T,f)\}\}$, \underline{and} $bot$ is closed then the formula
   $f$ is true in every world $w$ of $(R, pv)$:
 \begin{verbatim}
 Kripke_model R pv ==>
-   RTC (CURRY (fringe_rules idt_tab_rule)) {{(T,f)}} bot ==>
-   dt_closes bot ==> forces R pv w f
+   RTC (CURRY (extend_fringe idt_tab_rule)) {{(T,f)}} bot ==>
+   dt_closed bot ==> forces R pv w f
 \end{verbatim}
 \end{quote}
 Here, \texttt{CURRY} : $(\alpha ~\times ~\beta \to bool) \to
@@ -900,7 +939,8 @@ $\alpha$ and $\beta$: which is the form required by
 \texttt{RTC}.
 Also, note that the construct
 \texttt{A ==> B ==> C} in \hol{} is logical equivalent to the construct
-\verb!A /\ B ==> C!, which is why the English prose uses ``and''.
+\verb!A /\ B ==> C!, which is why the English prose uses
+``\underline{and}'' rather than ``implies''.
 
 Notice that we defined a (portion of a) dual-tableau using reflexive
 transitive closure of the relation which takes one fringe to the next,
@@ -980,7 +1020,12 @@ transitive, and the valuation \texttt{pv} is persistent over
 Note, currently there is no condition that the set of worlds is
 non-empty as is usual in Kripke semantics. For the moment, we do not
 need it. As we shall see, it will become essential later in the
-completeness proof.
+completeness proof. Also, note that intuitionistic Kripke frames are
+often defined to be reflexive, transitive and anti-symmetric: 
+$\forall x, y. R~ x~ y ~\&~ R~ y~ x \Longrightarrow x = y$. 
+The ``persistence'' of the binary relation $R$ ensures that the two
+definitions give rise to the same notion of validity. But again, we
+do not require this extra condition.
 
 \begin{definition}[\texttt{forces R pv w f}]\label{defn-forces}
   The usual forcing relation \texttt{forces R pv w f} that
@@ -1047,11 +1092,24 @@ stuck when, contrary to our expectations, we found that
 Lemma~\ref{is-tab-rule-pres-eqv} does not hold for these
 valuations. We therefore reworked all the definitions as shown next.
 
+\marginpar{JED?}
+\textbf{Section 5: You mention that with a certain definition, Lemma 7 does not hold.
+Does this mean that there is a mistake in the Fitting’s proof? If so, I would
+welcome a slightly longer discussion of that: Is that misake severe? Does it
+show that mechanized proofs are important, or does not not really matter.
+If there is no mistake in paper proofs, then I wonder why one should believe or
+care whether Lemma 7 should hold for the auxillary definition.
+}
+
 Given a set \textit{sfs} of signed formulae, the intuitionistic
 formula attributed to \textit{sfs} is
 $\bigwedge Fs \supset \bigvee Ts$ where \textit{Fs} and \textit{Ts}
 are each the set of unsigned formulae that are $F$-signed and
-$T$-signed in \textit{sfs}, respectively.  According to
+$T$-signed in \textit{sfs}, respectively.  Here, 
+the empty disjunction is read as contradiction $\bot$ and 
+the implication $p \supset \bot$ is intuitionistically equivalent to
+the negation of $p$.
+According to
 Definition~\ref{defn-forces}, the intuitionistic semantics of
 $p \supset q$ (\texttt{Imp p q}) at a world $w$
 involves evaluating the classical
@@ -1136,7 +1194,7 @@ in the fringe satisfies
 \end{definition}
 
 The open loop below captures that \texttt{tab\_val\_aux} is defined in
-terms of \texttt{sf\_val\_aux} which is used to define
+terms of \texttt{sfs\_val\_aux} which is used to define
 \texttt{sfs\_val} which is used to define \texttt{tab\_val}:
 \begin{verbatim}
            sfs_val_aux --- sfs_val
@@ -1156,18 +1214,18 @@ every future world \textit{v} of \textit{w}:
 \end{verbatim}
 \end{lemma}
 
-We want to prove soundness in terms of dual-tableaux closing, so we have
+We want to prove soundness in terms of closed dual-tableaux, so we have
 
 \begin{lemma}[\texttt{idt\_br\_sound},\texttt{idt\_dt\_sound}]
 \label{idt-br-sound} \label{idt-dt-sound}
-  If a dual-tableau branch closes, then the auxiliary valuation (using
+  If a dual-tableau branch is closed, then the auxiliary valuation (using
   \texttt{sfs\_val}) of the leaf of that branch is true, and if a
-  dual-tableau closes, then the valuation (using
+  dual-tableau is closed, then the valuation (using
   \texttt{tab\_val}) of the fringe is true.
 \end{lemma}
 \begin{verbatim}
-   idt_br_sound : br_closes br ==> sfs_val R pv w br
-   idt_dt_sound : dt_closes tab ==> tab_val R pv w tab
+   idt_br_sound : br_closed br ==> sfs_val R pv w br
+   idt_dt_sound : dt_closed tab ==> tab_val R pv w tab
 \end{verbatim}
 
 The intuition of the above lemma is, of course, that the leaf of
@@ -1175,14 +1233,14 @@ each closed branch contains at least one formula \textit{f} that
 appears in both \textit{Fs} and \textit{Ts}, and hence is the witness
 for the right-hand side of $\bigwedge \mathit{Fs} \supset \bigvee \mathit{Ts}$.
 
-For the first six rules of \cite[Figure~6]{fitting-dual-tableau}
+For the first six rules of \cite[Figure~1.6]{fitting-dual-tableau}
 (without the context $S$)
 the preservation of validity is in fact an equivalence where we use
 \textit{b} as a place-holder for a sign:
 
 \begin{lemma}[\texttt{idt\_rules\_aux\_eqv}] \label{idt-rules-aux-equiv}
   For the skeletons of the first six rules of 
-  \cite[Figure~6]{fitting-dual-tableau}(without the context $S$),
+  \cite[Figure~1.6]{fitting-dual-tableau} (without the context $S$),
   the auxiliary valuation of the signed formula
   $(b, f)$ from the rule premise equals the auxiliary
   valuation of the set  \textit{sfss} of signed formula sets from the
@@ -1191,11 +1249,13 @@ the preservation of validity is in fact an equivalence where we use
 %idt_rules_aux_eqv : 
 \begin{verbatim}
   reflexive R ==> gen_idt_rule ((b,f),sfss) 
-
       ==> (tab_val_aux R pv w sfss = sfs_val_aux R pv w {(b,f)})
 \end{verbatim}
 
-Why do we suddenly need reflexivity?  Because for the $\supset$-F
+Here, we have deliberately used \texttt{(b, f)} rather than the
+equivalent \texttt{sf} to highlight the following: why do we suddenly
+need reflexivity?  
+Because for the $\supset$-F
 rule (ignoring the $S$), where $b=F$ and $f = (X \supset Y)$, the
 \texttt{tab\_val\_aux} of the conclusions $F (X \supset Y), F Y$
 and $F (X \supset Y), T X$ is the conjunction of the respective
@@ -1250,10 +1310,10 @@ and only then quantifying over future worlds.
 
 However Lemma~\ref{idt-rules-aux-equiv} clearly extends to the
 actual valuations, and we get a similar equivalence
-for the last two rules of~\cite[Figure~6]{fitting-dual-tableau}.
+for the last two rules of~\cite[Figure~1.6]{fitting-dual-tableau}.
 
 \begin{lemma}[\texttt{ant\_rules\_eqv}] \label{ant-rules-eqv} For the
-  skeletons of the last two rules of \cite[Figure~6]{fitting-dual-tableau}
+  skeletons of the last two rules of \cite[Figure~1.6]{fitting-dual-tableau}
   (without the context $S$ or $S_F$),
   the valuation of the premise signed formula equals the
   valuation of the set of signed formula sets in the conclusions,
@@ -1382,7 +1442,7 @@ the fringe of a dual-tableau, rather than a single leaf (set of signed formulae)
 % \end{lemma}
 % \begin{verbatim}
 % idt_pres_frg :
-%   Kripke_model R pv ==> fringe_rules idt_tab_rule (prev, next) 
+%   Kripke_model R pv ==> extend_fringe idt_tab_rule (prev, next) 
 %                ==> tab_val R pv w next ==> tab_val R pv w prev
 % \end{verbatim}
 \begin{lemma}[\texttt{idt\_pres\_frg}] \label{idt-pres-frg} If we
@@ -1393,7 +1453,7 @@ the fringe of a dual-tableau, rather than a single leaf (set of signed formulae)
 %idt_pres_frg :
 \begin{verbatim}
   Kripke_model R pv  ==> 
-    fringe_rules idt_tab_rule (prev, next) ==> 
+    extend_fringe idt_tab_rule (prev, next) ==> 
        tab_val R pv w next  ==> tab_val R pv w prev
 \end{verbatim}
 
@@ -1407,7 +1467,7 @@ reflexive transitive closure of the set of rules, not just a single rule.
 %idt_rtc_pres_frg
 \begin{verbatim}
  Kripke_model R pv ==>
-    !bot. RTC (CURRY (fringe_rules idt_tab_rule)) top bot ==> 
+    !bot. RTC (CURRY (extend_fringe idt_tab_rule)) top bot ==> 
         tab_val R pv w bot ==> tab_val R pv w top
 \end{verbatim}
 
@@ -1439,16 +1499,16 @@ Lemmas \ref{idt-rtc-pres-frg}, \ref{tab-val-single} and \ref{idt-dt-sound}.
 % and \texttt{idt\_dt\_sound}.
 
 \begin{theorem}[\texttt{idt\_sound}] \label{idt-sound}
-If a dual-tableau for the the signed formula $(T,f)$ closes
+If a dual-tableau for the the signed formula $(T,f)$ is closed
 then any model \textit{R, pv} forces \textit{f} at any world
-% If a dual-tableau, starting with the signed formula $(T,f)$, closes,
+% If a dual-tableau, starting with the signed formula $(T,f)$, is closed,
 % then any model \textit{R, pv} forces \textit{f} at any world
 \textit{w}.
 %idt_sound : 
 \begin{verbatim}
  Kripke_model R pv ==>
-    RTC (CURRY (fringe_rules idt_tab_rule)) {{(T,f)}} bot 
-    ==> dt_closes bot 
+    RTC (CURRY (extend_fringe idt_tab_rule)) {{(T,f)}} bot 
+    ==> dt_closed bot 
     ==> forces R pv w f
 \end{verbatim}
 \end{theorem}
@@ -1463,45 +1523,46 @@ considered by \hol{} to be universally quantified.
 \section{Formalising completeness} %(file idt\_completeScript.sml)}
 
 We now describe how we formalised Fitting's completeness
-proof~\cite{fitting-dual-tableau}.
+proof~\cite[Section~1.3.3]{fitting-dual-tableau} for intuitionistic
+dual tableaux.
 
 \subsection{$I$-tautologous sets of signed formulae}
 
-We give two ways to formalise $I$-tautologous sets, one folliwing Fitting
+We give two ways to formalise $I$-tautologous sets, one following Fitting
 and another using inductive definitions.
 
 \subsubsection{$I$-tautologous sets }
 
 We first define an $I$-tautologous set of signed formulae similarly to
-\cite[Definition~3]{fitting-dual-tableau}, but without the
+\cite[Definition~4]{fitting-dual-tableau}, but without the
 requirements that: (i) an $I$-tautologous set S must have a finite
 $I$-tautologous subset; and (ii) that the closure of each branch is
 atomic; and (iii) that dual-tableaux satisfy the single-use
 restriction, whereby only active signed formulae are considered for a
-rule application (see \cite[Definition~2.1]{fitting-dual-tableau}).
+rule application (see \cite[Definition~1]{fitting-dual-tableau}).
 We also define an $I$-tautologous set of sets of signed formulae (a set
-of dual-tableau leaves, ie a dual-tableau fringe):
+of dual-tableau leaves, \ie a dual-tableau fringe):
 \begin{definition}[\texttt{Itautss},\texttt{Itauts}]\label{Itauts-def}
 \label{Itauts}
 \label{Itautss}
 A set \texttt{top} of sets of signed formulae is $I$-tautologous w.r.t.\
-a set \texttt{rs} of rules (i.e.\ \texttt{Itautss rs top} holds) if
+a set \texttt{rs} of rules (\ie \texttt{Itautss rs top} holds) if
 starting with \texttt{top} and repeatedly applying rules from
 \texttt{rs} gives
-a fringe \texttt{bot} which closes. A set \texttt{s} of signed
+a fringe \texttt{bot} which is closed. A set \texttt{s} of signed
 formulae is $I$-tautologous w.r.t.\ a set \texttt{rs} of rules if
 \texttt{Itautss rs \{s\}} holds.
 \begin{verbatim}
 Itautss : 'a sf set rule set -> 'a sf set set -> bool ;
 Itautss rs top = 
-  ?bot. RTC (CURRY (fringe_rules rs)) top bot /\ dt_closes bot
+  ?bot. RTC (CURRY (extend_fringe rs)) top bot /\ dt_closed bot
 
 Itauts  : 'a sf set rule set -> 'a sf set -> bool ;
 Itauts rs s = Itautss rs {s} 
 \end{verbatim}
 % val Itauts_def = Define `Itauts rs s = Itautss rs {s}` ;
 % val Itautss_def = Define `Itautss rs s =
-%   ?bot. RTC (CURRY (fringe_rules rs)) s bot /\ dt_closes bot` ;
+%   ?bot. RTC (CURRY (extend_fringe rs)) s bot /\ dt_closed bot` ;
 \end{definition}
 
 We proved
@@ -1526,7 +1587,7 @@ every resulting branch \texttt{br} in the conclusion
 %ITAUT_EX_RULE :
 \begin{verbatim}
  IMAGE SND rs SUBSET FINITE ==> 
-   (Itauts rs top = dt_closes {top} 
+   (Itauts rs top = dt_closed {top} 
     \/ ?rb. (top, rb) IN rs /\ !br. br IN rb ==> Itauts rs br)
 \end{verbatim}
 \end{lemma}
@@ -1540,8 +1601,9 @@ formulae. The construct \texttt{FINITE} is the set of all finite sets
 so \texttt{X SUBSET FINITE} encodes
 $\forall x \in X.\ x \subset \mathtt{FINITE}$.
 Thus \texttt{IMAGE SND rs SUBSET FINITE} says that each $C_i$ is
-finite, which captures that each rule is finitely branching as shown next.
+finite, which captures that each rule is finitely branching.
 
+\comment{ deleted - referee's comment
 \begin{lemma}
 \texttt{IMAGE SND rs SUBSET FINITE} means that
 every rule in \texttt{rs} is finitely branching.
@@ -1549,6 +1611,7 @@ every rule in \texttt{rs} is finitely branching.
 \begin{verbatim}
 IMAGE SND rs SUBSET FINITE <=> !t b. (t, b) IN rs ==> FINITE b
 \end{verbatim}
+}
 
 \subsubsection{An inductive definition of $I$-tautologous sets}
 
@@ -1564,7 +1627,7 @@ stated in Lemma~\ref{ITAUT-EX-RULE}.
   formulae satisfies \texttt{Itauti rs} iff
   \begin{enumerate} 
   \item \label{Itauti-1}
-    \texttt{top} is itself closed w.r.t.\ \texttt{rs}, or
+    \texttt{top} is itself closed, \underline{or}
   \item \label{Itauti-2}
    some rule \texttt{(top, rb)} in \texttt{rs} 
    is applicable to \texttt{top} to obtain the conclusion \texttt{rb} 
@@ -1574,18 +1637,18 @@ stated in Lemma~\ref{ITAUT-EX-RULE}.
   and \texttt{Itauti rs} is the unique minimal predicate (set) such that
   \ref{Itauti-1} and \ref{Itauti-2} hold.
 \begin{verbatim} 
-(!top. br_closes top ==> Itauti rs top) /\ 
+(!top. br_closed top ==> Itauti rs top) /\ 
 (!top. (?rb. (top,rb) IN rs /\ !br. br IN rb ==> Itauti rs br)  
                      ==> Itauti rs top)
 \end{verbatim}
 \end{definition}
 
-First, note that the linguistic ``or'' between clauses~\ref{Itauti-1}
+First, note that the linguistic ``\underline{or}'' between clauses~\ref{Itauti-1}
 and~\ref{Itauti-2} turns into a logical
 ``and'' (\verb!/\!) because the English clauses capture the
 equivalent definition:
 \begin{verbatim} 
-!top.( (br_closes top) \/ 
+!top.( (br_closed top) \/ 
        (?rb. (top,rb) IN rs /\ !br. br IN rb ==> Itauti rs br)
      ) ==> Itauti rs top
 \end{verbatim}
@@ -1617,7 +1680,7 @@ then every signed formula set
 \end{lemma}
 \begin{verbatim}
  !rs Itauti'. 
-  (!top. br_closes top ==> Itauti' top) /\ 
+  (!top. br_closed top ==> Itauti' top) /\ 
   (!top. (?rb. (top,rb) IN rs /\ !br. br IN rb ==> Itauti' br) 
          ==> Itauti' top) 
   ==> !a0. Itauti rs a0 ==> Itauti' a0
@@ -1626,7 +1689,7 @@ then every signed formula set
 Intuitively, the lemma states that
 any set (predicate) \texttt{Itauti'} which is closed under
 the clauses of Definition~\ref{Itauti} for \texttt{Itauti rs} is a superset
-of \texttt{Itauti rs}: \textit{i.e.} \texttt{Itauti rs} is the smallest set
+of \texttt{Itauti rs}: \ie \texttt{Itauti rs} is the smallest set
 satisfying those clauses.
 
 % THIS SEEMS TO BE IN EFFECT A REPETITION OF THE ABOVE 
@@ -1648,7 +1711,7 @@ satisfying those clauses.
 % \texttt{rs} then \texttt{P a} holds.
 % \begin{verbatim}
 %  !rs P. 
-%     (!top. br_closes top ==> P top) 
+%     (!top. br_closed top ==> P top) 
 %  /\ (!top. (?rb.(top,rb) IN rs /\ !br. br IN rb ==> P br) 
 %                                                        ==> P top)  
 %  ==> !a. Itauti rs a ==> P a
@@ -1679,7 +1742,7 @@ the properties \texttt{Itauti} and \texttt{Itauts} are equivalent.
 Note that the equivalence does not hold for (even a finite set of)
 infinitely branching rules because an infinitely branching rule can
 give an infinite dual-tableau of finite depth, in which each branch is
-finite.  If such a dual-tableau closes then it meets the definition of
+finite.  If such a dual-tableau is closed then it meets the definition of
 \texttt{Itauti}, but not the definition of \texttt{Itauts} since it
 does not close in a finite number of rule applications; to put it
 another way, definition \texttt{Itauts} involves a finite number of
@@ -1720,15 +1783,16 @@ signed formulae $(F, X)$ and $(T, X)$ for some formula $X$.
 A leaf is atomically closed if it contains $(F, p)$ and $(T, p)$
 for some atomic formula $p$ (in our encoding, $p = \texttt{Atom}\ a$ for some
 atom $a$).
-Fitting \cite{fitting-dual-tableau} uses atomic closure.
-We have used closure without this restriction, but we 
+Fitting \cite[Definition~2]{fitting-dual-tableau} uses atomic closure
+in his completeness proofs but
+we have used closure without this restriction. We 
 want to examine whether this makes any real difference.
 
 Having defined \texttt{Itauti} in Definition~\ref{Itauti},
 we now define a generalised version \texttt{Itautg},
 which is like \texttt{Itauti} except that it allows us
 to specify the requirement for a leaf to be considered closed
-(thus \texttt{Itauti} = \texttt{Itautg br\_closes}).
+(thus \texttt{Itauti} = \texttt{Itautg br\_closed}).
 
 \begin{definition}[\texttt{Itautg}]\label{Itautg} 
   For every predicate \texttt{cl} on signed formula sets and
@@ -1736,7 +1800,7 @@ to specify the requirement for a leaf to be considered closed
   formulae satisfies \texttt{Itautg cl rs} iff
   \begin{enumerate} 
   \item \label{Itautg-1}
-    \texttt{top} is itself closed w.r.t.\ \texttt{rs}, or
+    \texttt{top} satisfies \texttt{cl}, or
   \item \label{Itautg-2}
    some rule \texttt{(top, rb)} in \texttt{rs} 
    is applicable to \texttt{top} to obtain the conclusion \texttt{rb} 
@@ -1752,7 +1816,7 @@ to specify the requirement for a leaf to be considered closed
 \end{verbatim}
 \end{definition}
 
-Then \texttt{Itautg at\_closes idt\_tab\_rule} is the set of
+Then \texttt{Itautg at\_closed idt\_tab\_rule} is the set of
 $I$-tautologous sets, defined in terms of atomic closure, for
 intuitionistic dual-tableaux.
 
@@ -1764,11 +1828,11 @@ this justifies our approach to simplify proofs by not working throughout
 in terms of atomic closure.
 
 \begin{lemma}[\texttt{atomic\_closure}]\label{atomic-closure}
-A set is $I$-tautologous (per Definitions \ref{Itauti} and \ref{br-closes})
-iff it is $I$-tautologous (defined to require atomic closure)
+A set is $I$-tautologous (per Definitions \ref{Itauti} and \ref{br-closed})
+iff it is $I$-tautologous (defined to require atomic closure):
 \end{lemma}
 \begin{verbatim}
-Itauti idt_tab_rule sfs <=> Itautg at_closes idt_tab_rule sfs 
+Itauti idt_tab_rule sfs <=> Itautg at_closed idt_tab_rule sfs 
 \end{verbatim}
 
 We now discuss the three assumptions which we did not incorporate
@@ -1790,8 +1854,8 @@ in our definition of $I$-tautologous:
   since gone back and proved Lemma~\ref{atomic-closure} that
   everything also goes through if we demand atomic
   closure. Essentially, this required us to prove that a dual-tableau
-  which closes using non-atomic closure can be extended to a
-  dual-tableau which closes atomically.
+  which is closed using non-atomic closure can be extended to a
+  dual-tableau which is closed atomically.
 \item[\rm (iii) Single use restriction:] This restriction is also
   redundant: in fact, by inspection, it can be seen that applying a
   rule to an inactive formula does not make progress towards a closed
@@ -1800,13 +1864,14 @@ in our definition of $I$-tautologous:
   restriction, but a single use restriction is better for proof
   search. Indeed, it easily gives us decidability.''  That each
   formula is ``principal'' only once is also redundant as already
-  stated by Fitting~\cite[Definition~2.1]{fitting-dual-tableau}).
+  stated by Fitting~\cite[just after his Definition~2]{fitting-dual-tableau}.
 \end{description}
 
 \subsection{The Lindenbaum construction}
 
-We now discuss proving Theorem 2.6 (``after
-Lindenbaum'')~\cite{fitting-dual-tableau}.  Fitting assumes that the
+We now discuss proving Fitting's ``after
+Lindenbaum'' theorem~\cite[Theorem~1]{fitting-dual-tableau}. 
+Fitting assumes that the
 set of signed formulae is countable.
 %
 We proved the general lemma which expresses 
@@ -1816,11 +1881,21 @@ the effect obtained from the Lindenbaum construction.
 \texttt{maxnon} $P\ s$ means that the set $s$ does not satisfy the 
 predicate $P$, but that every proper superset of $s$ satisfies $P$.
 \begin{verbatim}
+   maxnon : ('a set -> bool) -> 'a set -> bool
    maxnon_def : maxnon P s = ~ P s /\ !t. s PSUBSET t ==> P t 
 \end{verbatim}
 \end{definition}
 
-Here, \texttt{PSUBSET} captures $s \subset t$.
+Here, \texttt{PSUBSET} captures $s \subset t$ (the proper subset relation).
+
+\begin{definition}[\texttt{ctns1}]\label{ctns1}
+\texttt{ctns1} $cs\ m$ means that the set $m$ contains at least one member
+of the set of sets $cs$.
+\begin{verbatim}
+   ctns1 : ('a set set) -> 'a set -> bool
+   ctns1_def : ctns1 cs m <=> ?c. c IN cs /\ c SUBSET m
+\end{verbatim}
+\end{definition}
 
 \begin{lemma}[\texttt{MAXNON\_CTNS1}] \label{MAXNON-CTNS1} Provided
   that we are dealing with members of a countable set $U$, if
@@ -1836,6 +1911,12 @@ countable (UNIV : 'a set)
 ==> ?s : 'a set. m SUBSET s /\ maxnon (ctns1 cs) s
 \end{verbatim}
 \end{lemma}
+
+\textbf{- p. 19, Lemma 24. The property ctns1 could be explained in the text,
+\marginpar{DONE, see defn above}
+one can infer its meaning from the context but it could be good
+to write explicitly what it means,
+}
 
 Here, we take $U$ to be the set of all
 members of its type, so $U$ is \texttt{UNIV}, the set of all things
@@ -1859,7 +1940,8 @@ the following lemma.
   ==> ?M : 'a sf set. s SUBSET M /\ maxnon (Itauti idt_tab_rule) M
 \end{verbatim}
 
-We can then ensure that the set of formulae, and
+% We can then ensure that the set of formulae, and
+To use this result, we prove that
 the set of signed-formulae, are countable as follows.
 \begin{lemma}[\texttt{FORMULAE\_COUNTABLE}, \texttt{SF\_COUNTABLE}]
 \label{FORMULAE-COUNTABLE}
@@ -1904,7 +1986,7 @@ Section~\ref{sec:unsigned-formulae}.
 
 The canonical model is built out of a (non-empty) set of ``worlds''
 built from maximal non-$I$-tautologous
-sets~\cite[page~17]{fitting-dual-tableau}. We therefore define a new type
+sets~\cite[just above Theorem~3]{fitting-dual-tableau}. We therefore define a new type
 \texttt{worlds} representing the set of maximal non-$I$-tautologous
 sets. But first, we have to show that this set is non-empty, because
 types in \hol{} are non-empty.
@@ -2008,12 +2090,11 @@ and the \texttt{SUBSET} construct then gives us the desired result.
 The canonical model is thus built from \texttt{worlds},
 \texttt{at\_val} and \texttt{idt\_R} in the usual way and we need to
 prove the Truth Lemma.
-
 For proving the Truth Lemma, we proved
 
 \begin{lemma}[\texttt{NON\_ITAUT\_RULE}]\label{NON-ITAUT-RULE}
   If the rules from the rule set \texttt{rs} are finitely branching, 
-  and \texttt{s} is maximal non-$I$-tautologous wrt.\ \texttt{rs},
+  and \texttt{s} is maximal non-$I$-tautologous w.r.t.\ \texttt{rs},
   and all extensions by a context of the skeleton rule
   (\texttt{top/bot}) are contained
   in \texttt{rs}, then if \texttt{top} is in \texttt{s}
@@ -2032,8 +2113,8 @@ Definition~\ref{at-val,idt-R}, thus giving rise to a forcing relation
 \texttt{forces idt\_R at\_val} which maps a particular 
 world $\Gamma$ and a particular formula $X$ to true or false.
 %
-The following result corresponds to the text following
-\cite[Thm 2.6]{fitting-dual-tableau}.
+The following result corresponds to Fitting's 
+``Intuitionistic Truth Lemma''~\cite[Theorem~3]{fitting-dual-tableau}.
 It is proved by induction on the formula X, using 
 % the \texttt{NON\_ITAUT\_RULE} 
 Lemma~\ref{NON-ITAUT-RULE}.
@@ -2099,8 +2180,8 @@ Now, using the contrapositive form, we get completeness as desired:
 %   \texttt{\{\{(T,f)\}\}} by repeatedly applying rules from the rule
 %   set \texttt{id\_tab\_rule} and \texttt{bot} is closed.
 % \begin{verbatim}
-%    ?bot. RTC (CURRY (fringe_rules idt_tab_rule)) {{(T,f)}} bot 
-%          /\ dt_closes bot
+%    ?bot. RTC (CURRY (extend_fringe idt_tab_rule)) {{(T,f)}} bot 
+%          /\ dt_closed bot
 % \end{verbatim}
 
 %   Equivalently according to Definition~\ref{Itauts-def} of
@@ -2197,7 +2278,7 @@ as discussed earlier, and proved in Lemma~\ref{ITAUTI-IDT-FINITE}.
 %
 However another approach here is to define an $I$-tautologous set as one which
 has a finite $I$-tautologous subset, as Fitting does, in
-\cite[Definition~3.3]{fitting-dual-tableau}. 
+\cite[Definition~7]{fitting-dual-tableau}. 
 We did this (calling it \texttt{fITauts}), which made it easy to
 prove analogues of the results
 % \texttt{Itauti\_idt\_mono} and \texttt{ITAUTI\_IDT\_FINITE} above
@@ -2240,12 +2321,25 @@ of the theorems provided by Melvin Fitting in his chapter in this
 volume, although our proofs sometimes proceed differently. We have
 also highlighted how inductive definitions often make proofs easier
 since we can perform structural induction on the clauses that make up
-the inductive definition. One caveat: Jeremy Dawson has over 20 years
-of experience in interactive theorem proving, and yet it took him 2
-months of full-time work to complete these proofs, so interactive
-theorem proving is time-consuming and laborious! All of our \hol-code
+the inductive definition. All of our \hol-code
 can be found via the link (\url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}).
 
+
+Regarding the effort required. 
+The proof script is \textbf{XXXXX} lines of \hol-code.
+Contrasted against Fitting's original
+chapter~\cite{fitting-dual-tableau}, we see a blow up factor of about
+\textbf{YYYY}, which is quite standard in such ventures.
+\marginpar{JED?}\textbf{How much theory had to be developed that is not specific to this
+particular task? (Here, lemma 26 comes to mind. This lemma is tedious, but not
+interesting. In principle, there is a generic way of proving an algebraic data
+type to be countable. How much support for such reasoning is there in HOL?
+Would different theorem provers fare differently here?)}
+
+One caveat: Jeremy Dawson has over 20 years
+of experience in interactive theorem proving, and yet it took him 2
+months of full-time work to complete these proofs, so interactive
+theorem proving is time-consuming and laborious! 
 
 % \bibliography{dualtableaux}
  \bibliographystyle{alpha}
