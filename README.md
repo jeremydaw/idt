@@ -1,6 +1,7 @@
 # idt
-This github repository, named idt, user jeremydaw, contains the paper
-(in subdirectory orlowska-idt)
+This github repository, named idt, user jeremydaw,
+( https://github.com/jeremydaw/idt )
+contains the paper (in subdirectory orlowska-idt)
 Dawson and Gore,
 Machine-checked Meta-theory of Dual-Tableaux for Intuitionistic Logic
 in the monograph
