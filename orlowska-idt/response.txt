@@ -1,0 +1,13 @@
+We thank the referee for the detailed comments.
+
+We have taken almost everything into account so here we just list the
+things that we did *not* do.
+
+The referee suggested that we replace "x IN S" with "S x" uniformly to
+make the connections between set membership and predicates clearer. We
+have not done this as the two are not equivalent in HOL4, although
+they are provably equivalent in the sense that one holds iff the
+second holds.
+
+
+
