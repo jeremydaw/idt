@@ -173,7 +173,7 @@ atom is a variable left to be chosen later.
 \begin{definition}[formula]
  The formulae of intuitionistic logic are built from an infinite
  supply of atomic formulae (\texttt{Atom 'a} over some base type
-\marginpar{Could we put Atom clause first? SOME PROOFS BREAK, WOULD NEED TO FIX}
+%\marginpar{Could we put Atom clause first? SOME PROOFS BREAK, WOULD NEED TO FIX}
  \texttt{'a})
  using the connectives
  $\land$ (\texttt{And}),
@@ -424,7 +424,8 @@ are both sets of type \texttt{'f set}. That is,
 $(L, R)$ is the sequent $L \vdash R$. For some given set $S$ of signed
 formulae, Fitting would write these as 
 $L = (S^F)^\circ$
-and \marginpar{JED please check! LOOKS OK}
+and 
+%\marginpar{JED please check! LOOKS OK}
 $R = (S^T)^\circ$ 
 respectively.
 
@@ -616,7 +617,8 @@ a premise of type \texttt{'a} (here, a signed formula)
 and a set of conclusions
 \marginpar{changed wording of this para}
 where each conclusion is a set of items of type \texttt{'a} (here,
-signed formula), while \texttt{rule} (an ordinary rule) models an
+signed formula), while \texttt{rule} (an ordinary rule) models
+an\marginpar{What is an ``ordinary'' rule ? As opposed to what ?}
 operation that has a premise
 of type \texttt{'a} (here, a set of signed formulae) and a set
 of conclusions, each of which is an item of type \texttt{'a} 
@@ -829,10 +831,10 @@ which is the result of the rule.
           ==> extend_fringe rs ({s} UNION rf, sfr UNION rf) ;
 extend_fringe : 'sfs rule set -> ('sfs set # 'sfs set) set ;
 \end{verbatim}
-\marginpar{referee would like to use IN, here and elsewhere, 
-but this is different in HOL 
-(ie, type 'a set is s synonym for 'a $\to$ bool, but 
-x IN S is not the same as S x, just provably equivalent)}
+% \marginpar{referee would like to use IN, here and elsewhere, 
+% but this is different in HOL 
+% (ie, type 'a set is s synonym for 'a $\to$ bool, but 
+% x IN S is not the same as S x, just provably equivalent)}
 % rules rewritten to avoid use of INSERT 
 % ONCE_REWRITE_RULE [INSERT_SING_UNION] fringe_rules_rules ;
 \end{definition}
@@ -1932,11 +1934,11 @@ countable (UNIV : 'a set)
 \end{verbatim}
 \end{lemma}
 
-\textbf{- p. 19, Lemma 24. The property ctns1 could be explained in the text,
-\marginpar{DONE, see defn above}
-one can infer its meaning from the context but it could be good
-to write explicitly what it means,
-}
+% \textbf{- p. 19, Lemma 24. The property ctns1 could be explained in the text,
+% \marginpar{DONE, see defn above}
+% one can infer its meaning from the context but it could be good
+% to write explicitly what it means,
+% }
 
 Here, we take $U$ to be the set of all
 members of its type, so $U$ is \texttt{UNIV}, the set of all things
@@ -2002,7 +2004,7 @@ which causes \texttt{'a sf} to be instantiated to \texttt{num sf}.
 That is, \texttt{num sf} is \texttt{bool \# num formula}: see
 Section~\ref{sec:unsigned-formulae}.
 
-\subsection{The canonical model, the Truth Lemma and completeness}
+\subsection{The canonical model, Truth Lemma and completeness}
 
 The canonical model is built out of a (non-empty) set of ``worlds''
 built from maximal non-$I$-tautologous
