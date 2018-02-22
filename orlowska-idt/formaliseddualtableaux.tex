@@ -81,7 +81,7 @@ as a guide to others who may want to follow in our footsteps.
 We assume that the reader is familiar with Fitting's
 chapter~\cite{fitting-dual-tableau} in this volume, but not familiar
 with interactive theorem proving. All of our \hol{} files can be found
-here:\marginpar{see text}
+here: % \marginpar{see text}
 \url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}
 and are also available on GitHub at 
 \url{https://github.com/jeremydaw/idt} in the directory \texttt{hol}
@@ -274,7 +274,7 @@ representations.  We also illustrate some \hol{} syntax.
 The construct \texttt{'f} is a type variable: it will stand for a
 (unsigned) formula.
 In \hol, sets and predicates are identified, thus
-\marginpar{wording changed}
+% \marginpar{wording changed}
 the type $\alpha\ \mathit{set}$ 
 is the same as $\alpha \to \mathit{bool}$, and
 $x \in P$ (\texttt{x IN P}) is defined to be $P(x)$ (\texttt{P x)}.
@@ -615,11 +615,12 @@ of signed formulae.
 Thus \texttt{rule\_sk} (rule-skeleton) models the operation that has 
 a premise of type \texttt{'a} (here, a signed formula)
 and a set of conclusions
-\marginpar{changed wording of this para}
+% \marginpar{changed wording of this para}
 where each conclusion is a set of items of type \texttt{'a} (here,
-signed formula), while \texttt{rule} (an ordinary rule) models
-an\marginpar{What is an ``ordinary'' rule ? As opposed to what ?}
-operation that has a premise
+signed formula), while \texttt{rule} (a rule, with context, as applied) 
+\marginpar{What is an ``ordinary'' rule ? As opposed to what ?
+WORDING CHANGED}
+models an operation that has a premise
 of type \texttt{'a} (here, a set of signed formulae) and a set
 of conclusions, each of which is an item of type \texttt{'a} 
 (here, a set of signed formulae).
@@ -667,7 +668,7 @@ the type \texttt{'sf rule\_sk} is an abbreviation for
   set set}.
 
 So where a rule-skeleton,
-\marginpar{changed wording of this para also}
+% \marginpar{changed wording of this para also}
 as in~\cite[Fig.\ 1.3]{fitting-dual-tableau}, has, for its premise,
 a signed formula and, for its conclusion, a set of sets of signed formulae
 (so of type \texttt{'sf rule\_sk}),
@@ -1098,14 +1099,14 @@ stuck when, contrary to our expectations, we found that
 Lemma~\ref{is-tab-rule-pres-eqv} does not hold for these
 valuations. We therefore reworked all the definitions as shown next.
 
-\marginpar{JED? Answered in footnote a few pages on}
-\textbf{Section 5: You mention that with a certain definition, Lemma 7 does not hold.
-Does this mean that there is a mistake in the Fitting’s proof? If so, I would
-welcome a slightly longer discussion of that: Is that misake severe? Does it
-show that mechanized proofs are important, or does not not really matter.
-If there is no mistake in paper proofs, then I wonder why one should believe or
-care whether Lemma 7 should hold for the auxillary definition.
-}
+% \marginpar{JED? Answered in footnote a few pages on}
+% \textbf{Section 5: You mention that with a certain definition, Lemma 7 does not hold.
+% Does this mean that there is a mistake in the Fitting’s proof? If so, I would
+% welcome a slightly longer discussion of that: Is that misake severe? Does it
+% show that mechanized proofs are important, or does not not really matter.
+% If there is no mistake in paper proofs, then I wonder why one should believe or
+% care whether Lemma 7 should hold for the auxillary definition.
+% }
 
 Given a set \textit{sfs} of signed formulae, the intuitionistic
 formula attributed to \textit{sfs} is
@@ -1543,13 +1544,13 @@ and another using inductive definitions.
 
 We first define an $I$-tautologous set of signed formulae similarly to
 \cite[Definition~7]{fitting-dual-tableau}, but without the
-\marginpar{was Def 4}
+% \marginpar{was Def 4}
 requirements that: (i) an $I$-tautologous set S must have a finite
 $I$-tautologous subset; and (ii) that the closure of each branch is
 atomic; and (iii) that dual-tableaux satisfy the single-use
 restriction, whereby only active signed formulae are considered for a
 rule application (see \cite[Definitions~1,4]{fitting-dual-tableau}).
-\marginpar{was Def 1}
+% \marginpar{was Def 1}
 We also define an $I$-tautologous set of sets of signed formulae (a set
 of dual-tableau leaves, \ie a dual-tableau fringe):
 \begin{definition}[\texttt{Itautss},\texttt{Itauts}]\label{Itauts-def}
@@ -1763,8 +1764,8 @@ of finite depth.
 The definition of \texttt{Itauti} was easier to work with than that of
 \texttt{Itauts}, avoiding our difficult earlier proof of 
 Lemma~\ref{ITAUT-EX-RULE}.
-\marginpar{this para added, can't quantify relative effort as previous proof
-of Lemma~\ref{ITAUT-EX-RULE} has been deleted}
+% \marginpar{this para added, can't quantify relative effort as previous proof
+% of Lemma~\ref{ITAUT-EX-RULE} has been deleted}
 However, using both definitions and proving their equivalence
 (in the case of finitely branching rules) essentially shows that,
 even when using the definition \texttt{Itauti}, we need only finitely many steps
@@ -2350,7 +2351,7 @@ Regarding the effort required.
 The proof script is {2100} lines of \hol-code.
 Contrasted against Fitting's original
 chapter~\cite{fitting-dual-tableau}, this is a similar length --- 
-\marginpar{blowup factor not meaningful}
+% \marginpar{blowup factor not meaningful}
 but containing much more detail of small proof steps, and much less descriptive
 and explanatory material.
 This contains some results which were proved in a roundabout way, or with
@@ -2360,7 +2361,7 @@ and a small amount of theory not specific to this particular task,
 such as the proof of Lemma~\ref{SF-COUNTABLE}.
 (Generally HOL offers good support for most common generic reasoning tasks, 
 although not for proving an algebraic data type to be countable).
-\marginpar{Question answered}
+% \marginpar{Question answered}
 
 One caveat: Jeremy Dawson has over 20 years
 of experience in interactive theorem proving, and yet it took him 2
