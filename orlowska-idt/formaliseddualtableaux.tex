@@ -47,10 +47,10 @@ Logic}
 \newpage
 \section{Introduction and motivation}
 
-\textbf{Ensure that Mel cites our work properly. He mentions ``proof
-  theory'' in his citation on page 3 line 5, but this is not really
-  accurate as our contribution mimics his in using the semantics. His
-  citation should also say ``Dawson and Gor\'e'' not just ``Gor\'e''.}
+% \textbf{Ensure that Mel cites our work properly. He mentions ``proof
+%   theory'' in his citation on page 3 line 5, but this is not really
+%   accurate as our contribution mimics his in using the semantics. His
+%   citation should also say ``Dawson and Gor\'e'' not just ``Gor\'e''.}
 
 Tableaux calculi originated with the work of Beth in the
 1950s~\cite{beth-padoas}. In 1959, they were used by
@@ -273,16 +273,18 @@ representations.  We also illustrate some \hol{} syntax.
 
 The construct \texttt{'f} is a type variable: it will stand for a
 (unsigned) formula.
-In \hol, sets and predicates are identified, thus
+In \hol, 
 % \marginpar{wording changed}
 the type $\alpha\ \mathit{set}$ 
-is the same as $\alpha \to \mathit{bool}$, and
-$x \in P$ (\texttt{x IN P}) is defined to be $P(x)$ (\texttt{P x)}.
+is ``syntactic sugar'' for $\alpha \to \mathit{bool}$.
 Whether a particular term $x$ (say) of type 
 $\mathtt{\alpha}$ is or
 is not in the set $P$ of type $\alpha\ \mathtt{set}$ is determined by the
 value \texttt{T} or \texttt{F} from
 \texttt{bool} which the predicate $P(x)$ takes.
+Separately, $x \in P$ (\texttt{x IN P}) is logically defined to be $P(x)$
+(\texttt{P x)}. Although \texttt{x IN P} and $P(x)$ are provably equivalent, and thus
+synonymous, they are not identical terms.
 
 The function $\mathit{FST} : \gamma \times \delta \to \gamma$
 returns the first component of type $\gamma$ of a pair
@@ -290,13 +292,13 @@ of type $(\gamma,\delta)$.
 If we put $\gamma = \mathit{bool}$ then 
 $\mathit{FST}$ is of type 
 $\mathit{bool} \times \delta \to \mathit{bool}$,
-which is synonymous with $(\mathit{bool} \times \delta)~\mathit{set}$
+which is syntactic sugar for $(\mathit{bool} \times \delta)~\mathit{set}$
 in \hol{}.
 %thus allowing us to view  $\mathit{FST}$ as a set.
 % CHANGED Fri Feb  3 12:48:21 AEDT 2017
-That is, for a term $z: \mathit{bool} \times \delta$,
+For a term $z: \mathit{bool} \times \delta$,
 the predicate $FST(z)$ evaluates to true exactly when
-the first component of $z$ is $T$.
+the first component of $z$ evaluates to $T$.
 Thus $FST : (\mathit{bool} \times \delta)\ \mathit{set}$
 means the set of all pairs (of the appropriate type) of the form $(T, x)$.
 
@@ -618,8 +620,6 @@ and a set of conclusions
 % \marginpar{changed wording of this para}
 where each conclusion is a set of items of type \texttt{'a} (here,
 signed formula), while \texttt{rule} (a rule, with context, as applied) 
-\marginpar{What is an ``ordinary'' rule ? As opposed to what ?
-WORDING CHANGED}
 models an operation that has a premise
 of type \texttt{'a} (here, a set of signed formulae) and a set
 of conclusions, each of which is an item of type \texttt{'a} 
@@ -1769,7 +1769,7 @@ Lemma~\ref{ITAUT-EX-RULE}.
 However, using both definitions and proving their equivalence
 (in the case of finitely branching rules) essentially shows that,
 even when using the definition \texttt{Itauti}, we need only finitely many steps
-(which is implicit in way \texttt{Itauts} is defined).
+(which is implicit in the way \texttt{Itauts} is defined).
 
 We then obtained further necessary results, such as the monotonicity
 of \texttt{Itauti} and that $I$-tautologous is a property of finite
@@ -1887,7 +1887,7 @@ in our definition of $I$-tautologous:
   search. Indeed, it easily gives us decidability.''  That each
   formula is ``principal'' only once is also redundant as already
   stated by Fitting~\cite[just after his Definition~2]{fitting-dual-tableau}.
-  \marginpar{where ???}
+%  \marginpar{where ???}
 \end{description}
 
 \subsection{The Lindenbaum construction}

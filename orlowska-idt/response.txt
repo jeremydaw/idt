@@ -9,5 +9,15 @@ have not done this as the two are not equivalent in HOL4, although
 they are provably equivalent in the sense that one holds iff the
 second holds.
 
+One referee also suggested replacing "Meta-theory" in the title but we
+are confident that "Meta-theory of dual tableaux" is specific enough.
+
+Please can you ensure that Mel cites our work properly. He mentions
+``proof theory'' in his citation on page 3 line 5, but this is not
+really accurate as our contribution mimics his in using the
+semantics. His citation should also say ``Dawson and Gor\'e'' not just
+``Gor\'e''.
+
+
 
 
