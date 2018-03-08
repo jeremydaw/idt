@@ -529,7 +529,7 @@ usually also a context $S$ which remains unchanged from premise to
 conclusions. For example, consider the rule for $F ~ X \lor Y$ shown
 below on the left. It consists of a rule-skeleton as shown below on
 the right, which is then decorated uniformly by the context $S$ to
-give the actual rule shown on the left. Its pricipal formula is
+give the actual rule shown on the left. Its principal formula is
 $F~ X \lor Y$ and its side-formula sets are $\{F~X , F~ X \lor Y \}$
 and $\{F~Y , F~ X \lor Y \}$:
 \[
@@ -911,7 +911,7 @@ an arbitrary formula $f$ rather than an atomic formula \texttt{Atom} $p$.
 Later on (see Lemma~\ref{atomic-closure}) we show
 that everything still goes through if we demand that $f$ is atomic.
 
-Now, the action of repeately applying dual-tableau rules from some set of
+Now, the action of repeatedly applying dual-tableau rules from some set of
 rules can be expressed as the reflexive transitive closure of
 application of any rule from that set.
 In \hol,, a reflexive transitive closure function \texttt{RTC} is provided:
@@ -1338,7 +1338,7 @@ for the last two rules of~\cite[Figure~1.6]{fitting-dual-tableau}.
 
 Note that we now need both reflexivity and transitivity.
 
-We can characterise the effect of adding antededent context, that is,
+We can characterise the effect of adding antecedent context, that is,
 adding $F$-signed formulae to the context:
 
 \begin{lemma}[\texttt{ant\_ctxt\_eqv}] \label{ant-ctxt-eqv}
@@ -1993,7 +1993,7 @@ We thus obtain %thereby getting
   Assume that the atomic formulae are indexed by the natural numbers:
   that is, let \texttt{'a} be \texttt{num} in \texttt{'a sf}.
   Then, if \texttt{s} is non-$I$-tautologous, then \texttt{s}
-  has a superset \texttt{M} which is maximal non-$I$-tautlogous.
+  has a superset \texttt{M} which is maximal non-$I$-tautologous.
 \end{lemma}
 %LINDENBAUM
 \begin{verbatim}
@@ -2067,7 +2067,7 @@ numbers by setting the type of $s$ to be \texttt{num sf set}.
 
 We now have a set of worlds built out of maximal non-$I$-tautologous
 sets of signed formulae. We define the canonical model over these
-worlds by definining the valuation of atoms over these worlds and the
+worlds by defining the valuation of atoms over these worlds and the
 binary Kripke relation between worlds.  
 
 \begin{definition}[\texttt{at\_val, idt\_R}]\label{at-val,idt-R}
@@ -2367,6 +2367,9 @@ One caveat: Jeremy Dawson has over 20 years
 of experience in interactive theorem proving, and yet it took him 2
 months of full-time work to complete these proofs, so interactive
 theorem proving is time-consuming and laborious! 
+
+\paragraph{Acknowledgements.} We are grateful to the anonymous
+reviewers for their suggestions for improvements.
 
 % \bibliography{dualtableaux}
  \bibliographystyle{alpha}
