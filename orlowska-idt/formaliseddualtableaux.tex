@@ -59,7 +59,7 @@ completeness of his semantics for modal logics such as S5.  They were
 extended to many modal logics and to intuitionistic logic by Melvin
 Fitting~\cite{fitting-proof} in the 1970s. Since 1992, they have
 gained a life of their own via the conference series named ``Theorem
-Proving with Analytic Tableaux and Related Methods'' which will have
+Proving with Analytic Tableaux and Related Methods'' which had
 its 25th anniversary in Brazil in 2017. However, an honest appraisal
 of the literature must acknowledge a parallel, and sometimes more
 advanced, tradition known as ``dual-tableaux'' which arose in Poland
@@ -96,7 +96,7 @@ Logic of Computable Functions~\cite{scott-computable}. The user must
 first encode all of the required definitions of the meta-theory into
 \hol{} so we provide most of the details of our definitions. The user
 then inputs a goal which \hol{} is asked to prove. Typically, \hol{}
-reduces that goal into multiple subgoals and expects the user chooses
+reduces that goal into multiple subgoals and expects the user to choose
 the next step of the proof to perform. \hol{} accepts the next step
 only if it can be used in a sound way to reduce the chosen subgoal
 into further subgoals. Thus \hol{} also keeps track of the proof
@@ -292,7 +292,7 @@ of type $(\gamma,\delta)$.
 If we put $\gamma = \mathit{bool}$ then 
 $\mathit{FST}$ is of type 
 $\mathit{bool} \times \delta \to \mathit{bool}$,
-which is syntactic sugar for $(\mathit{bool} \times \delta)~\mathit{set}$
+which is ``syntactic de-sugar'' for $(\mathit{bool} \times \delta)~\mathit{set}$
 in \hol{}.
 %thus allowing us to view  $\mathit{FST}$ as a set.
 % CHANGED Fri Feb  3 12:48:21 AEDT 2017
@@ -308,7 +308,7 @@ The functions
 and
 \mbox{\rm\texttt{get\_fs}}
 are defined as:
-\\[1em]
+\\
 \mbox{\rm
   \begin{tabular}[c]{ll}
   \\ \texttt{get\_ts } & \texttt{: (bool \# 'f) set -> 'f set}
@@ -381,7 +381,7 @@ from
  and 
  $\mathtt{dest\_seq~(fs,~ts)}$ 
  are defined as:
- \\[1em]
+ \\
  \mbox{\rm
  \begin{tabular}[c]{ll}
    \texttt{mk\_seq} & \texttt{: (bool \# 'f) set -> 'f set \# 'f set ;}
@@ -945,7 +945,7 @@ with the type $(\alpha ~\to ~\beta \to bool)$ on two curried arguments
 $\alpha$ and $\beta$: which is the form required by 
 \texttt{RTC}.
 Also, note that the construct
-\texttt{A ==> B ==> C} in \hol{} is logical equivalent to the construct
+\texttt{A ==> B ==> C} in \hol{} is logically equivalent to the construct
 \verb!A /\ B ==> C!, which is why the English prose uses
 ``\underline{and}'' rather than ``implies''.
 
@@ -984,7 +984,7 @@ directly:
  A binary relation $R$ over some given set of worlds of type
  \texttt{'w} is a function that maps a pair $w$ and $v$ of worlds
  of type \texttt{'w} to \texttt{T} or \texttt{F} depending on
- whether the pair $w,v$ is or is not in the relation,
+ whether the pair $(w,v)$ is or is not in the relation,
  ie, whether $wRv$ or not.
 
  A propositional valuation $pv$ maps a 
@@ -1311,7 +1311,7 @@ which would make
 \texttt{tab\_val\_aux R pv w esfss} and \texttt{sfs\_val\_aux R pv w esf}
 unequal.
 This doesn't suggest a flaw in Fitting's proof, rather that the level of detail
-he gives doesn't indicate precisely the sequence of lemmas to be used.}
+he gives doesn't indicate precisely the sequence of lemmata to be used.}
 This means that the proof of Lemma~\ref{idt-pres-frg}, 
 so far as it concerns these rules, depends on first applying 
 Lemma~\ref{is-tab-rule-pres-eqv} to Lemma~\ref{idt-rules-aux-equiv}
@@ -1522,7 +1522,7 @@ then any model \textit{R, pv} forces \textit{f} at any world
 \end{verbatim}
 \end{theorem}
 
-Here, the dual-tableau starts has an  initial
+Here, the dual-tableau has an  initial
 fringe $\{\{(T,f)\}\}$ and repeatedly applying the dual-tableau rules
 to this fringe converts it to the closed fringe $bot$.
 Why do we not have explicit universal quantifiers over $R$, $pv$ and
