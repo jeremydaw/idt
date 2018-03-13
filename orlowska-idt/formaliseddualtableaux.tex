@@ -325,8 +325,9 @@ are defined as:
 \end{definition}
 
 Here, the function \texttt{get\_ts} accepts a set of pairs of type
-\texttt{(bool, 'f)}, for any type \texttt{'f} and returns a set of
-items of type \texttt{'f}. By giving it an argument of type \texttt{sf
+\texttt{bool \# 'f}, for any type \texttt{'f} and returns a set of
+%LMC pg 5 middle
+items of type \texttt{'f}. By giving it an argument of type \texttt{'a sf
   set}, we will cause \texttt{'f} to become \texttt{'a formula}. We
 therefore use the name \texttt{sfs} in the code to stand for the name
 of a set of signed-formulae.
@@ -988,13 +989,14 @@ directly:
  ie, whether $wRv$ or not.
 
  A propositional valuation $pv$ maps a 
- world $w$ of type \texttt{'w} and an atom of type \texttt{'a formula}
+ world $w$ of type \texttt{'w} and an atom of type \texttt{'a}
  to 
 \texttt{T} or else \texttt{F} depending on
  whether the atom $a$ is true or false at world $w$.
+%LMC Def 14
 \begin{verbatim}
   R  : 'w -> 'w -> bool
-  pv : 'w -> ('a formula) -> bool
+  pv : 'w -> 'a -> bool
 \end{verbatim}
 \end{definition}
 
@@ -1225,7 +1227,8 @@ We want to prove soundness in terms of closed dual-tableaux, so we have
 
 \begin{lemma}[\texttt{idt\_br\_sound},\texttt{idt\_dt\_sound}]
 \label{idt-br-sound} \label{idt-dt-sound}
-  If a dual-tableau branch is closed, then the auxiliary valuation (using
+  If a dual-tableau branch is closed, then the valuation (using
+  % LMC Lemma 5
   \texttt{sfs\_val}) of the leaf of that branch is true, and if a
   dual-tableau is closed, then the valuation (using
   \texttt{tab\_val}) of the fringe is true.
@@ -1412,7 +1415,8 @@ world).
 \end{verbatim}
 Why is it $\{sf\}$ but not $\{esf\}$?
 Because $sf$ is a single signed formula and \texttt{sfs\_val} requires
-a set of signed-formulae, while $efs$ is a set of signed-formulae since
+% LMC pg 15 line -3
+a set of signed-formulae, while $esf$ is a set of signed-formulae since
 it is $\{sf\}$ extended by adding context.
 
 To get from this to the case where the premise can have an arbitrary context,
@@ -1737,7 +1741,9 @@ Definition~\ref{Itauti} for \texttt{Itauti} and
 Definition~\ref{Itauts} for \texttt{Itauts},
 under the assumption that rules are finitely branching:
 this assumption is required since the definition \texttt{Itauti}
-allows the case of an infinitely branching dual-tableau of finite depth.
+allows the case of an infinitely branching dual-tableau 
+even without any path of infinite depth down a branch.
+%LMC before Lemmas 19 
 
 \begin{lemma}[\texttt{ITAUTS\_EQ\_I}] \label{ITAUTS-EQ-I}
 For every rule set \texttt{rs},
@@ -1753,13 +1759,15 @@ the properties \texttt{Itauti} and \texttt{Itauts} are equivalent.
   
 Note that the equivalence does not hold for (even a finite set of)
 infinitely branching rules because an infinitely branching rule can
-give an infinite dual-tableau of finite depth, in which each branch is
+give an infinite dual-tableau (which may be of unbounded depth),
+in which each path down a branch is
 finite.  If such a dual-tableau is closed then it meets the definition of
 \texttt{Itauti}, but not the definition of \texttt{Itauts} since it
 does not close in a finite number of rule applications; to put it
 another way, definition \texttt{Itauts} involves a finite number of
-dual-tableau steps, whereas definition \texttt{Itauti} involves a dual-tableau
-of finite depth.
+dual-tableau steps, whereas definition \texttt{Itauti} 
+involves a dual-tableau with only finite paths.
+%LMC between Lemmas 19 and 20 
 
 The definition of \texttt{Itauti} was easier to work with than that of
 \texttt{Itauts}, avoiding our difficult earlier proof of 
@@ -1965,7 +1973,8 @@ the following lemma.
 
 % We can then ensure that the set of formulae, and
 To use this result, we prove that
-the set of signed-formulae, are countable as follows.
+%LMC was line 1 of pg 22
+the set of signed-formulae is countable as follows.
 \begin{lemma}[\texttt{FORMULAE\_COUNTABLE}, \texttt{SF\_COUNTABLE}]
 \label{FORMULAE-COUNTABLE}
 \label{SF-COUNTABLE}
@@ -2050,7 +2059,8 @@ sets of signed formulae to \texttt{worlds} such that:
     (w\_rep a) = a}; and
 \item for every set \texttt{s} of signed formulae 
   \texttt{w\_rep (w\_abs s) = s} iff \texttt{s} is
-  maximal non-$I$-tautologous wrt.\ \texttt{rs}.
+  maximal non-$I$-tautologous wrt.\ \texttt{idt\_tab\_rule}.
+  %LMC Lemma 28 pg 23 top (ii)
 \end{enumerate}
 \begin{verbatim}
 w_rep : worlds -> num sf set
@@ -2345,7 +2355,11 @@ volume, although our proofs sometimes proceed differently. We have
 also highlighted how inductive definitions often make proofs easier
 since we can perform structural induction on the clauses that make up
 the inductive definition. All of our \hol-code
-can be found via the link (\url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}).
+can be found via the link
+(\url{http://users.cecs.anu.edu.au/~jeremy/hol/idt/}),
+and is also available on GitHub at 
+\url{https://github.com/jeremydaw/idt} in the directory \texttt{hol}.
+%LMC pg 27 s7 middle
 
 Regarding the effort required. 
 The proof script is {2100} lines of \hol-code.
